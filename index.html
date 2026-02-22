@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nelson SESAMI</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Bricolage+Grotesque:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: #e2ddd4;
+  --ink: #1a1814;
+  --ink2: #4a4540;
+  --muted: #9a9088;
+  --accent: #d4500a;
+  --accent2: #2a5f3f;
+  --accent3: #1a3a6b;
+  --accent4: #7a2d6b;
+  --gold: #c4920a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif; min-height: 100vh; }
+
+/* LAYOUT */
+.shell { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+
+/* SIDEBAR */
+.nav { background: var(--ink); padding: 0; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+.nav-brand { padding: 28px 24px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.nav-brand-name { font-family: 'Instrument Serif', serif; font-size: 22px; color: #fff; line-height: 1.2; }
+.nav-brand-sub { font-size: 10px; color: rgba(255,255,255,0.35); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 4px; }
+.nav-items { padding: 16px 12px; flex: 1; }
+.nav-section { font-size: 9px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 1.5px; padding: 0 12px; margin: 16px 0 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; transition: all .15s; color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 400; margin-bottom: 2px; border: 1px solid transparent; }
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8); }
+.nav-item.active { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.1); }
+.nav-item-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.nav-item.active .nav-item-icon { background: var(--accent); }
+.nav-item:not(.active) .nav-item-icon { background: rgba(255,255,255,0.06); }
+.nav-footer { padding: 16px 24px; border-top: 1px solid rgba(255,255,255,0.08); }
+.nav-user { font-size: 11px; color: rgba(255,255,255,0.3); font-family: 'DM Mono', monospace; }
+.nav-user strong { color: rgba(255,255,255,0.6); display: block; font-size: 12px; margin-bottom: 2px; }
+
+/* MAIN */
+.main { display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 36px; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+.topbar-title { font-family: 'Instrument Serif', serif; font-size: 20px; }
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+.tag { font-size: 10px; font-family: 'DM Mono', monospace; padding: 3px 9px; border-radius: 20px; font-weight: 500; }
+.tag-orange { background: rgba(212,80,10,0.1); color: var(--accent); border: 1px solid rgba(212,80,10,0.2); }
+.tag-green { background: rgba(42,95,63,0.1); color: var(--accent2); border: 1px solid rgba(42,95,63,0.2); }
+.tag-blue { background: rgba(26,58,107,0.1); color: var(--accent3); border: 1px solid rgba(26,58,107,0.2); }
+.tag-purple { background: rgba(122,45,107,0.1); color: var(--accent4); border: 1px solid rgba(122,45,107,0.2); }
+
+.page { display: none; padding: 36px; flex: 1; }
+.page.active { display: block !important; animation: fadeUp .25s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* CARDS */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+.card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.card-title { font-family: 'Instrument Serif', serif; font-size: 18px; }
+.card-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+/* FORMS */
+.form-grid { display: grid; gap: 14px; }
+.form-grid-2 { grid-template-columns: 1fr 1fr; }
+.form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.form-input, .form-select, .form-textarea { background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; outline: none; transition: border-color .15s; width: 100%; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent); background: var(--surface); }
+.form-textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+.form-select { cursor: pointer; }
+
+/* BUTTONS */
+.btn { padding: 10px 20px; border-radius: 8px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; border: none; display: inline-flex; align-items: center; gap: 7px; }
+.btn-primary { background: var(--ink); color: #fff; }
+.btn-primary:hover { background: #2d2820; transform: translateY(-1px); }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-accent:hover { opacity: .88; transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
+.btn-outline:hover { border-color: var(--ink); }
+.btn-sm { padding: 6px 14px; font-size: 12px; }
+.btn-copy { background: var(--surface2); color: var(--ink2); border: 1px solid var(--border); padding: 7px 14px; border-radius: 7px; font-size: 12px; cursor: pointer; font-family: 'DM Mono', monospace; transition: all .15s; }
+.btn-copy:hover { background: var(--ink); color: #fff; }
+.btn-copy.copied { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+
+/* OUTPUT */
+.output-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 20px; position: relative; margin-top: 16px; }
+.output-box.has-content { border-color: var(--accent); background: var(--surface); }
+.output-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.output-label { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.output-text { font-size: 13px; line-height: 1.8; color: var(--ink2); white-space: pre-wrap; min-height: 60px; }
+.output-placeholder { color: var(--muted); font-size: 13px; font-style: italic; }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* CHIPS */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.chip { padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; border: 1.5px solid var(--border); color: var(--ink2); background: var(--surface); transition: all .15s; }
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* KANBAN */
+.kanban { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; height: calc(100vh - 200px); overflow-x: auto; }
+.kanban-col { background: var(--surface2); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 200px; }
+.kanban-col-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.kanban-col-title { font-size: 12px; font-weight: 600; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .5px; }
+.kanban-count { font-size: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1px 7px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.kanban-drop { flex: 1; min-height: 60px; border-radius: 8px; transition: background .15s; }
+.kanban-drop.drag-over { background: rgba(212,80,10,0.06); outline: 2px dashed rgba(212,80,10,0.3); outline-offset: -2px; }
+.deal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: grab; transition: all .15s; animation: fadeUp .2s ease; }
+.deal-card:hover { border-color: rgba(212,80,10,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+.deal-card:active { cursor: grabbing; }
+.deal-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.deal-company { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.deal-value { font-size: 12px; color: var(--accent2); font-weight: 600; margin-top: 8px; }
+.deal-date { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 4px; }
+.deal-badge { font-size: 9px; font-family: 'DM Mono', monospace; padding: 2px 7px; border-radius: 10px; display: inline-block; margin-top: 6px; }
+.btn-add-deal { width: 100%; background: transparent; border: 1.5px dashed var(--border); border-radius: 8px; padding: 8px; color: var(--muted); font-size: 12px; cursor: pointer; transition: all .15s; font-family: 'Bricolage Grotesque', sans-serif; margin-top: 4px; }
+.btn-add-deal:hover { border-color: var(--accent); color: var(--accent); background: rgba(212,80,10,0.04); }
+
+/* KANBAN MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); z-index: 200; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border-radius: 16px; padding: 28px; width: 440px; max-width: 90vw; animation: fadeUp .2s ease; border: 1px solid var(--border); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-title { font-family: 'Instrument Serif', serif; font-size: 20px; }
+.modal-close { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); width: 28px; height: 28px; border-radius: 7px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+
+/* ROI */
+.roi-result { background: var(--ink); color: #fff; border-radius: 14px; padding: 28px; margin-top: 20px; }
+.roi-result-title { font-family: 'Instrument Serif', serif; font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+.roi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+.roi-metric { text-align: center; }
+.roi-val { font-family: 'Instrument Serif', serif; font-size: 32px; color: #fff; line-height: 1; }
+.roi-val.highlight { color: #6ee89a; }
+.roi-metric-label { font-size: 10px; color: rgba(255,255,255,0.4); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .5px; margin-top: 6px; }
+.roi-pitch { background: rgba(255,255,255,0.06); border-radius: 10px; padding: 16px; font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.75); }
+
+/* PROSPECÇÃO TEMPLATES */
+.template-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.template-card { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all .15s; }
+.template-card:hover, .template-card.selected { border-color: var(--accent); background: rgba(212,80,10,0.04); }
+.template-card-icon { font-size: 20px; margin-bottom: 8px; }
+.template-card-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.template-card-desc { font-size: 11px; color: var(--muted); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--ink); color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 13px; z-index: 999; transform: translateY(80px); transition: transform .3s ease; font-family: 'Bricolage Grotesque', sans-serif; }
+.toast.show { transform: translateY(0); }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.stat-val { font-family: 'Instrument Serif', serif; font-size: 28px; line-height: 1; margin-bottom: 4px; }
+.stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+/* ═══ RADAR DE CONTAS ═══ */
+
+  :root{--bg:#0a0c10;--surface:#111318;--surface2:#181c24;--border:rgba(255,255,255,0.07);--accent:#00e5a0;--accent2:#ff6b35;--accent3:#4d9fff;--text:#e8eaf0;--muted:#5a6070;--hot:#ff4757;--warm:#ffa502;--cold:#4d9fff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,160,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,160,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+  body::after{content:'';position:fixed;top:-20%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,229,160,0.06) 0%,transparent 70%);pointer-events:none;z-index:0}
+  .app{position:relative;z-index:1}
+
+  /* ROLE PICKER */
+  .role-screen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
+  .role-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px;width:100%;max-width:400px;text-align:center}
+  .role-logo{width:48px;height:48px;border:2px solid var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;position:relative;margin:0 auto 20px}
+  .role-logo::before{content:'';width:14px;height:14px;background:var(--accent);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+  .role-logo::after{content:'';position:absolute;width:24px;height:24px;border:2px solid rgba(0,229,160,0.3);border-radius:50%;animation:ripple 2s ease-out infinite}
+  .role-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px}
+  .role-sub{color:var(--muted);font-size:13px;margin-bottom:28px}
+  .role-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .role-btn{padding:18px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;text-align:center}
+  .role-btn:hover{border-color:rgba(0,229,160,0.4);background:rgba(0,229,160,0.05)}
+  .role-btn-icon{font-size:28px;display:block;margin-bottom:8px}
+  .role-btn strong{display:block;font-family:'Syne',sans-serif;font-size:14px;margin-bottom:4px}
+  .role-btn span{font-size:11px;color:var(--muted)}
+
+  #page-radar-header{display:none}
+  .logo{display:flex;align-items:center;gap:12px}
+  .logo-icon{width:36px;height:36px;border:1.5px solid var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative}
+  .logo-icon::before{content:'';width:10px;height:10px;background:var(--accent);border-radius:50%;animation:pulse 2s ease-in-out infinite}
+  .logo-icon::after{content:'';position:absolute;width:20px;height:20px;border:1.5px solid rgba(0,229,160,0.3);border-radius:50%;animation:ripple 2s ease-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.8}}
+  @keyframes ripple{0%{transform:scale(.5);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+  .logo h1{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.3px}
+  .logo span{font-weight:400;color:var(--muted)}
+  .header-right{display:flex;align-items:center;gap:10px}
+  .live-badge{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:20px;padding:4px 12px}
+  .live-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 1.5s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+  .role-badge{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:20px;border:1px solid}
+  .role-badge.admin{color:var(--warm);border-color:rgba(255,165,2,0.3);background:rgba(255,165,2,0.08)}
+  .role-badge.viewer{color:var(--cold);border-color:rgba(77,159,255,0.3);background:rgba(77,159,255,0.08)}
+  .sync-indicator{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px}
+  .sync-indicator.syncing{color:var(--warm)}.sync-indicator.synced{color:var(--accent)}.sync-indicator.error{color:var(--hot)}
+  .btn-excel{background:transparent;color:var(--accent);border:1px solid rgba(0,229,160,0.3);padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s}
+  .btn-excel:hover{background:rgba(0,229,160,0.08)}
+  .btn-import{background:transparent;color:var(--accent3);border:1px solid rgba(77,159,255,0.3);padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s}
+  .btn-import:hover{background:rgba(77,159,255,0.08)}
+  .btn-add{background:var(--accent);color:#0a0c10;border:none;padding:8px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .2s}
+  .btn-add:hover{opacity:.85;transform:translateY(-1px)}
+
+  #page-radar .stats-bar{display:flex;gap:1px;padding:0 32px;background:var(--border);border-bottom:1px solid var(--border)}
+  .stat-item{flex:1;padding:16px 20px;background:var(--surface);display:flex;align-items:center;gap:12px}
+  .stat-icon{font-size:18px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:var(--surface2)}
+  .stat-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;line-height:1}
+  .stat-label{font-size:11px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+
+  #page-radar .main-radar{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 120px)}
+  #page-radar .sidebar{border-right:1px solid var(--border);padding:24px 0;background:#111318}
+  #page-radar .sidebar-section{padding:0 20px;margin-bottom:28px}
+  #page-radar .sidebar-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+  .filter-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:9px 12px;background:transparent;border:1px solid transparent;border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;text-align:left;margin-bottom:2px}
+  .filter-btn:hover{background:var(--surface2)}
+  .filter-btn.active{background:rgba(0,229,160,0.08);border-color:rgba(0,229,160,0.2);color:var(--accent)}
+  .filter-count{font-family:'DM Mono',monospace;font-size:11px;background:var(--surface2);padding:2px 7px;border-radius:10px;color:var(--muted)}
+  .filter-btn.active .filter-count{background:rgba(0,229,160,0.15);color:var(--accent)}
+  .priority-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px}
+  .search-box{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+  .search-box:focus{border-color:rgba(0,229,160,.4)}
+  .search-box::placeholder{color:var(--muted)}
+
+  #page-radar .content{padding:28px 32px}
+  .content-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+  .content-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:600}
+  .sort-select{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer}
+  .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+
+  .account-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;transition:all .2s;position:relative;overflow:hidden;animation:fadeIn .4s ease both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .account-card:hover{border-color:rgba(0,229,160,0.25);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+  .account-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+  .account-card.hot::before{background:var(--hot)}.account-card.warm::before{background:var(--warm)}.account-card.cold::before{background:var(--cold)}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+  .company-info{display:flex;align-items:center;gap:12px}
+  .company-avatar{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:16px;flex-shrink:0}
+  .company-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;margin-bottom:2px}
+  .company-segment{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+  .priority-badge{font-size:10px;font-family:'DM Mono',monospace;padding:3px 8px;border-radius:20px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+  .badge-hot{background:rgba(255,71,87,.12);color:var(--hot);border:1px solid rgba(255,71,87,.3)}
+  .badge-warm{background:rgba(255,165,2,.12);color:var(--warm);border:1px solid rgba(255,165,2,.3)}
+  .badge-cold{background:rgba(77,159,255,.12);color:var(--cold);border:1px solid rgba(77,159,255,.3)}
+  .signals{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+  .signal-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--surface2);border-radius:8px;border-left:2px solid transparent}
+  .signal-item.expansion{border-left-color:var(--accent)}.signal-item.news{border-left-color:var(--accent3)}.signal-item.competitor{border-left-color:var(--accent2)}
+  .signal-icon{font-size:13px;flex-shrink:0;margin-top:1px}
+  .signal-text{font-size:12px;color:var(--text);line-height:1.4;flex:1}
+  .signal-time{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;flex-shrink:0;margin-top:2px}
+  .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border)}
+  .signal-count{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+  .signal-count span{color:var(--accent);font-weight:500}
+  .card-actions{display:flex;gap:6px}
+  .btn-action{font-size:11px;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+  .btn-action:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-ai{font-size:11px;background:linear-gradient(135deg,rgba(0,229,160,0.1),rgba(77,159,255,0.1));border:1px solid rgba(0,229,160,0.25);color:var(--accent);padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;display:flex;align-items:center;gap:4px}
+  .btn-ai:hover{background:rgba(0,229,160,0.18)}.btn-ai.loading{opacity:.6;cursor:not-allowed}
+
+  .ai-panel{display:none;margin-top:12px;padding:14px;background:linear-gradient(135deg,rgba(0,229,160,0.05),rgba(77,159,255,0.05));border:1px solid rgba(0,229,160,0.2);border-radius:10px}
+  .ai-panel.visible{display:block;animation:fadeIn .3s ease}
+  .ai-panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .ai-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:1px}
+  .ai-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0 4px}
+  .ai-text{font-size:12px;line-height:1.7;color:var(--text);white-space:pre-wrap}
+  .ai-typing::after{content:'▋';animation:blink .8s infinite;color:var(--accent)}
+
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center}
+  .modal-overlay.open{display:flex}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;width:480px;max-width:90vw;max-height:85vh;overflow-y:auto;animation:slideUp .25s ease}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+  .modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700}
+  .modal-close{background:var(--surface2);border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+  .form-group{margin-bottom:16px}
+  .form-label{display:block;font-size:11px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+  .form-input,.form-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+  .form-input:focus,.form-select:focus{border-color:rgba(0,229,160,.4)}
+  .form-select option{background:var(--surface2)}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .btn-submit{width:100%;background:var(--accent);color:#0a0c10;border:none;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:8px}
+  .btn-submit:hover{opacity:.85}
+
+  .drop-zone{border:2px dashed rgba(77,159,255,0.3);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:16px}
+  .drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent3);background:rgba(77,159,255,0.05)}
+  .drop-zone-icon{font-size:32px;margin-bottom:10px}
+  .drop-zone-text{font-size:13px;color:var(--muted);line-height:1.6}
+  .drop-zone-text strong{color:var(--accent3)}
+  .template-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px}
+  .template-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+  .template-cols{display:flex;gap:6px;flex-wrap:wrap}
+  .col-tag{background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:6px}
+  .col-tag.optional{background:rgba(255,255,255,0.04);border-color:var(--border);color:var(--muted)}
+  .preview-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px;max-height:180px;overflow-y:auto;display:block}
+  .preview-table th{background:var(--surface2);color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;font-size:10px;padding:7px 10px;text-align:left;border-bottom:1px solid var(--border);position:sticky;top:0}
+  .preview-table td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--text)}
+  .import-summary{display:flex;gap:10px;margin-bottom:16px}
+  .import-stat{flex:1;background:var(--surface2);border-radius:8px;padding:10px 12px;text-align:center}
+  .import-stat-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--accent)}
+  .import-stat-label{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px}
+  .btn-download-template{width:100%;background:transparent;color:var(--accent3);border:1px dashed rgba(77,159,255,0.3);padding:9px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;margin-bottom:12px}
+
+  .empty-state{text-align:center;padding:60px 20px;color:var(--muted);display:none}
+  .empty-state.visible{display:block}
+  .empty-state-icon{font-size:40px;margin-bottom:12px}
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#0a0c10;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;transform:translateY(80px);transition:transform .3s ease;font-family:'DM Sans',sans-serif}
+  .toast.show{transform:translateY(0)}
+  ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-brand-name">Nelson<br>SESAMI</div>
+      <div class="nav-brand-sub">by Nelson Lima</div>
+    </div>
+    <div class="nav-items">
+      <div class="nav-section">Ferramentas</div>
+      <div class="nav-item active" onclick="goTo('followup',this)">
+        <div class="nav-item-icon">✉️</div>
+        <span>Follow-up</span>
+      </div>
+      <div class="nav-item" onclick="goTo('prospeccao',this)">
+        <div class="nav-item-icon">🎯</div>
+        <span>Prospecção</span>
+      </div>
+      <div class="nav-item" onclick="goTo('roi',this)">
+        <div class="nav-item-icon">📊</div>
+        <span>Calculadora ROI</span>
+      </div>
+      <div class="nav-item" onclick="goTo('pipeline',this)">
+        <div class="nav-item-icon">📋</div>
+        <span>Pipeline</span>
+      </div>
+      <div class="nav-item" onclick="goTo('radar',this)">
+        <div class="nav-item-icon">📡</div>
+        <span>Radar de Contas</span>
+      </div>
+    </div>
+    <div class="nav-footer">
+      <div class="nav-user">
+        <strong>Nelson Lima</strong>
+        Varejo Alimentar
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">E-mail de Follow-up</div>
+      <div class="topbar-actions">
+        <span class="tag tag-orange" id="topbar-tag">Comunicação</span>
+        <div id="radar-topbar-actions" style="display:none;gap:8px;align-items:center" class="topbar-actions"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════ FOLLOW-UP ═══════════════════════════ -->
+    <div class="page active" id="page-followup">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Contexto da Reunião</div>
+                <div class="card-desc">Preencha os dados para gerar o e-mail ideal</div>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="form-grid form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Empresa</label>
+                  <input class="form-input" id="fu-empresa" placeholder="Ex: Grupo Pão de Açúcar">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Contato</label>
+                  <input class="form-input" id="fu-contato" placeholder="Ex: Ricardo Silva">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Cargo do contato</label>
+                <div class="chips" id="fu-cargo-chips">
+                  <div class="chip selected" onclick="selectChip(this,'fu-cargo')">CEO / Dono</div>
+                  <div class="chip" onclick="selectChip(this,'fu-cargo')">Gerente de TI</div>
+                  <div class="chip" onclick="selectChip(this,'fu-cargo')">Gerente de Operações</div>
+                  <div class="chip" onclick="selectChip(this,'fu-cargo')">Diretor Comercial</div>
+                </div>
+                <input type="hidden" id="fu-cargo" value="CEO / Dono">
+              </div>
+              <div class="form-group">
+                <label class="form-label">O que foi discutido?</label>
+                <textarea class="form-textarea" id="fu-discussao" placeholder="Ex: Apresentamos nossa solução de gestão de estoque. Cliente demonstrou interesse mas pediu prazo de retorno em 2 semanas..."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Principal objeção levantada</label>
+                <div class="chips" id="fu-objecao-chips">
+                  <div class="chip selected" onclick="selectChip(this,'fu-objecao')">Preço alto</div>
+                  <div class="chip" onclick="selectChip(this,'fu-objecao')">Prazo de implementação</div>
+                  <div class="chip" onclick="selectChip(this,'fu-objecao')">Precisa aprovar internamente</div>
+                  <div class="chip" onclick="selectChip(this,'fu-objecao')">Já tem solução</div>
+                  <div class="chip" onclick="selectChip(this,'fu-objecao')">Nenhuma</div>
+                </div>
+                <input type="hidden" id="fu-objecao" value="Preço alto">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Próximo passo combinado</label>
+                <input class="form-input" id="fu-proximo" placeholder="Ex: Enviar proposta até sexta-feira">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tom do e-mail</label>
+                <div class="chips">
+                  <div class="chip selected" onclick="selectChip(this,'fu-tom')">Direto e objetivo</div>
+                  <div class="chip" onclick="selectChip(this,'fu-tom')">Consultivo</div>
+                  <div class="chip" onclick="selectChip(this,'fu-tom')">Urgência suave</div>
+                </div>
+                <input type="hidden" id="fu-tom" value="Direto e objetivo">
+              </div>
+            </div>
+            <div style="margin-top:16px">
+              <button class="btn btn-primary" onclick="gerarFollowUp()" style="width:100%">✉️ Gerar E-mail de Follow-up</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="height:100%">
+            <div class="card-header">
+              <div>
+                <div class="card-title">E-mail Gerado</div>
+                <div class="card-desc">Pronto para copiar e enviar</div>
+              </div>
+              <button class="btn-copy" id="btn-copy-fu" onclick="copiar('fu-output','btn-copy-fu')">Copiar</button>
+            </div>
+            <div class="output-box" id="fu-output-box">
+              <div class="output-text output-placeholder" id="fu-output">Preencha os dados ao lado e clique em "Gerar E-mail" para criar seu follow-up personalizado.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════ PROSPECÇÃO ═══════════════════════════ -->
+    <div class="page" id="page-prospeccao">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Gerar Mensagem de Prospecção</div>
+                <div class="card-desc">Personalizada por segmento e canal</div>
+              </div>
+            </div>
+
+            <div style="margin-bottom:16px">
+              <div class="form-label" style="margin-bottom:8px">Tipo de mensagem</div>
+              <div class="template-grid">
+                <div class="template-card selected" id="tpl-email" onclick="selectTemplate('email')">
+                  <div class="template-card-icon">✉️</div>
+                  <div class="template-card-title">E-mail frio</div>
+                  <div class="template-card-desc">Primeiro contato por e-mail</div>
+                </div>
+                <div class="template-card" id="tpl-linkedin" onclick="selectTemplate('linkedin')">
+                  <div class="template-card-icon">💼</div>
+                  <div class="template-card-title">LinkedIn</div>
+                  <div class="template-card-desc">Mensagem de conexão</div>
+                </div>
+                <div class="template-card" id="tpl-whatsapp" onclick="selectTemplate('whatsapp')">
+                  <div class="template-card-icon">💬</div>
+                  <div class="template-card-title">WhatsApp</div>
+                  <div class="template-card-desc">Abordagem direta e curta</div>
+                </div>
+                <div class="template-card" id="tpl-indicacao" onclick="selectTemplate('indicacao')">
+                  <div class="template-card-icon">🤝</div>
+                  <div class="template-card-title">Por indicação</div>
+                  <div class="template-card-desc">Quando tem um nome em comum</div>
+                </div>
+              </div>
+              <input type="hidden" id="pr-tipo" value="email">
+            </div>
+
+            <div class="form-grid">
+              <div class="form-grid form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Empresa alvo</label>
+                  <input class="form-input" id="pr-empresa" placeholder="Ex: Rede Nordestão">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Nome do decisor</label>
+                  <input class="form-input" id="pr-contato" placeholder="Ex: Ana Ferreira">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Cargo</label>
+                <div class="chips">
+                  <div class="chip selected" onclick="selectChip(this,'pr-cargo')">CEO / Dono</div>
+                  <div class="chip" onclick="selectChip(this,'pr-cargo')">Gerente de TI</div>
+                  <div class="chip" onclick="selectChip(this,'pr-cargo')">Gerente de Operações</div>
+                  <div class="chip" onclick="selectChip(this,'pr-cargo')">Diretor Comercial</div>
+                </div>
+                <input type="hidden" id="pr-cargo" value="CEO / Dono">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Gatilho / motivo do contato</label>
+                <div class="chips">
+                  <div class="chip selected" onclick="selectChip(this,'pr-gatilho')">Expansão de lojas</div>
+                  <div class="chip" onclick="selectChip(this,'pr-gatilho')">Abertura de mercado</div>
+                  <div class="chip" onclick="selectChip(this,'pr-gatilho')">Troca de sistema</div>
+                  <div class="chip" onclick="selectChip(this,'pr-gatilho')">Concorrente perdeu contrato</div>
+                  <div class="chip" onclick="selectChip(this,'pr-gatilho')">Sem motivo específico</div>
+                </div>
+                <input type="hidden" id="pr-gatilho" value="Expansão de lojas">
+              </div>
+              <div class="form-group" id="pr-indicacao-group" style="display:none">
+                <label class="form-label">Nome de quem indicou</label>
+                <input class="form-input" id="pr-indicador" placeholder="Ex: João Mendes">
+              </div>
+            </div>
+            <div style="margin-top:16px">
+              <button class="btn btn-primary" onclick="gerarProspeccao()" style="width:100%">🎯 Gerar Mensagem</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="height:100%">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Mensagem Gerada</div>
+                <div class="card-desc">Edite antes de enviar se necessário</div>
+              </div>
+              <button class="btn-copy" id="btn-copy-pr" onclick="copiar('pr-output','btn-copy-pr')">Copiar</button>
+            </div>
+            <div class="output-box" id="pr-output-box">
+              <div class="output-text output-placeholder" id="pr-output">Escolha o tipo de mensagem, preencha os dados e clique em "Gerar Mensagem".</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════ ROI ═══════════════════════════ -->
+    <div class="page" id="page-roi">
+      <div style="display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start">
+
+        <!-- INPUTS -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Dados do Projeto</div>
+              <div class="card-desc">Preencha para calcular o ROI</div>
+            </div>
+          </div>
+
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px">
+            <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Projeto / Solução</div>
+            <div class="form-group" style="margin-bottom:10px">
+              <label class="form-label">Nome do projeto</label>
+              <input class="form-input" id="roi-projeto" placeholder="Ex: Projeto Gatecash" oninput="calcROI()">
+            </div>
+            <div class="form-grid form-grid-2">
+              <div class="form-group">
+                <label class="form-label">CAPEX (compra)</label>
+                <input class="form-input" id="roi-capex" placeholder="R$ 0,00" oninput="maskReal(this);calcROI()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">OPEX (locação/mês)</label>
+                <input class="form-input" id="roi-opex" placeholder="R$ 0,00" oninput="maskReal(this);calcROI()">
+              </div>
+            </div>
+          </div>
+
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px">
+            <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Dados do Cliente</div>
+            <div class="form-grid form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Nº de PDVs</label>
+                <input class="form-input" id="roi-pdvs" type="number" placeholder="Ex: 10" oninput="calcROI()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Fat. mensal por PDV</label>
+                <input class="form-input" id="roi-fat-pdv" placeholder="R$ 0,00" oninput="maskReal(this);calcROI()">
+                <div style="font-size:10px;color:var(--muted);margin-top:3px">Ref: R$350k a R$500k</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px">
+            <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Perdas e Meta de Redução</div>
+            <div class="form-grid form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Perdas totais (%)</label>
+                <input class="form-input" id="roi-perdas-pct" type="number" placeholder="Ex: 1,82" step="0.01" oninput="calcROI()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Perdas não identificadas (%)</label>
+                <input class="form-input" id="roi-nao-id-pct" type="number" placeholder="Ex: 42" step="0.01" oninput="calcROI()">
+                <div style="font-size:10px;color:var(--muted);margin-top:3px">% das perdas totais</div>
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:10px">
+              <label class="form-label">Meta de redução de perdas (%)</label>
+              <input class="form-input" id="roi-meta-pct" type="number" placeholder="Ex: 30" step="1" oninput="calcROI()">
+              <div style="font-size:10px;color:var(--muted);margin-top:3px">% das perdas não identificadas que a solução reduz</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESULTADO -->
+        <div>
+          <div class="card" id="roi-result-card">
+            <div class="card-header">
+              <div class="card-title">Resultado</div>
+            </div>
+            <div id="roi-result-area">
+              <div style="text-align:center;padding:60px 20px;color:var(--muted);font-size:13px;font-style:italic">Preencha os dados ao lado para calcular o ROI</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════ PIPELINE ═══════════════════════════ -->
+    <div class="page" id="page-pipeline">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-val" id="pipe-total">0</div>
+          <div class="stat-label">Oportunidades</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="color:var(--accent2)" id="pipe-valor">R$ 0</div>
+          <div class="stat-label">Valor total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="color:var(--accent)" id="pipe-hot">0</div>
+          <div class="stat-label">Em negociação</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="color:var(--gold)" id="pipe-fechado">R$ 0</div>
+          <div class="stat-label">Fechado no mês</div>
+        </div>
+      </div>
+      <div class="kanban" id="kanban-board">
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title" style="color:var(--muted)">Prospecção</span>
+            <span class="kanban-count" id="cnt-prospeccao">0</span>
+          </div>
+          <div class="kanban-drop" id="col-prospeccao" ondragover="dragOver(event)" ondrop="drop(event,'prospeccao')" ondragleave="dragLeave(event)"></div>
+          <button class="btn-add-deal" onclick="openDealModal('prospeccao')">+ Adicionar</button>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title" style="color:var(--accent3)">Qualificação</span>
+            <span class="kanban-count" id="cnt-qualificacao">0</span>
+          </div>
+          <div class="kanban-drop" id="col-qualificacao" ondragover="dragOver(event)" ondrop="drop(event,'qualificacao')" ondragleave="dragLeave(event)"></div>
+          <button class="btn-add-deal" onclick="openDealModal('qualificacao')">+ Adicionar</button>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title" style="color:var(--accent)">Proposta</span>
+            <span class="kanban-count" id="cnt-proposta">0</span>
+          </div>
+          <div class="kanban-drop" id="col-proposta" ondragover="dragOver(event)" ondrop="drop(event,'proposta')" ondragleave="dragLeave(event)"></div>
+          <button class="btn-add-deal" onclick="openDealModal('proposta')">+ Adicionar</button>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title" style="color:var(--gold)">Negociação</span>
+            <span class="kanban-count" id="cnt-negociacao">0</span>
+          </div>
+          <div class="kanban-drop" id="col-negociacao" ondragover="dragOver(event)" ondrop="drop(event,'negociacao')" ondragleave="dragLeave(event)"></div>
+          <button class="btn-add-deal" onclick="openDealModal('negociacao')">+ Adicionar</button>
+        </div>
+        <div class="kanban-col">
+          <div class="kanban-col-header">
+            <span class="kanban-col-title" style="color:var(--accent2)">Fechado ✓</span>
+            <span class="kanban-count" id="cnt-fechado">0</span>
+          </div>
+          <div class="kanban-drop" id="col-fechado" ondragover="dragOver(event)" ondrop="drop(event,'fechado')" ondragleave="dragLeave(event)"></div>
+          <button class="btn-add-deal" onclick="openDealModal('fechado')">+ Adicionar</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════ RADAR DE CONTAS ═══════════════════════════ -->
+    <!-- RADAR ROLE PICKER OVERLAY -->
+    <div id="radar-role-screen" style="display:none;position:fixed;inset:0;background:rgba(10,12,16,0.92);z-index:400;align-items:center;justify-content:center;backdrop-filter:blur(8px)">
+      <div style="background:#111318;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px;width:100%;max-width:380px;text-align:center">
+        <div style="width:48px;height:48px;border:2px solid #00e5a0;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative">
+          <div style="width:14px;height:14px;background:#00e5a0;border-radius:50%"></div>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#e8eaf0;margin-bottom:6px">Radar de Contas</div>
+        <div style="color:#5a6070;font-size:13px;margin-bottom:28px">Como você vai usar?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <button onclick="enterAs('admin')" style="padding:18px 12px;background:#181c24;border:1px solid rgba(255,255,255,0.07);border-radius:12px;color:#e8eaf0;cursor:pointer;transition:all .2s;text-align:center">
+            <span style="font-size:28px;display:block;margin-bottom:8px">👑</span>
+            <strong style="display:block;font-family:'Syne',sans-serif;font-size:14px;margin-bottom:4px">Admin</strong>
+            <span style="font-size:11px;color:#5a6070">Gerencio e edito</span>
+          </button>
+          <button onclick="enterAs('viewer')" style="padding:18px 12px;background:#181c24;border:1px solid rgba(255,255,255,0.07);border-radius:12px;color:#e8eaf0;cursor:pointer;transition:all .2s;text-align:center">
+            <span style="font-size:28px;display:block;margin-bottom:8px">👁️</span>
+            <strong style="display:block;font-family:'Syne',sans-serif;font-size:14px;margin-bottom:4px">Visualizador</strong>
+            <span style="font-size:11px;color:#5a6070">Só visualizo</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-radar" style="padding:0">
+      <div class="stats-bar" id="radar-stats-bar">
+        
+    <div class="stat-item"><div class="stat-icon">🏢</div><div><div class="stat-val" id="total-count">0</div><div class="stat-label">Contas</div></div></div>
+    <div class="stat-item"><div class="stat-icon">🔥</div><div><div class="stat-val" id="hot-count" style="color:var(--hot)">0</div><div class="stat-label">Quentes</div></div></div>
+    <div class="stat-item"><div class="stat-icon">📡</div><div><div class="stat-val" id="signal-count" style="color:var(--accent)">0</div><div class="stat-label">Sinais hoje</div></div></div>
+    <div class="stat-item"><div class="stat-icon">⚡</div><div><div class="stat-val" id="opp-count" style="color:var(--warm)">0</div><div class="stat-label">Oportunidades</div></div></div>
+  
+      </div>
+      <div style="display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 180px)">
+        <aside class="sidebar" id="radar-sidebar">
+          <div class="sidebar-section">
+            <div class="sidebar-label">Buscar</div>
+            <input class="search-box" type="text" placeholder="Buscar empresa..." id="search-input" oninput="filterCards()">
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-label">Prioridade</div>
+            <button class="filter-btn active" onclick="setFilter('all',this)">Todas as contas <span class="filter-count" id="count-all">0</span></button>
+            <button class="filter-btn" onclick="setFilter('hot',this)"><span><span class="priority-dot" style="background:var(--hot)"></span>Quente</span><span class="filter-count" id="count-hot">0</span></button>
+            <button class="filter-btn" onclick="setFilter('warm',this)"><span><span class="priority-dot" style="background:var(--warm)"></span>Morno</span><span class="filter-count" id="count-warm">0</span></button>
+            <button class="filter-btn" onclick="setFilter('cold',this)"><span><span class="priority-dot" style="background:var(--cold)"></span>Frio</span><span class="filter-count" id="count-cold">0</span></button>
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-label">Sinais</div>
+            <button class="filter-btn" onclick="setSignalFilter('expansion',this)">🏗️ Expansão de lojas</button>
+            <button class="filter-btn" onclick="setSignalFilter('news',this)">📰 Notícias e mídia</button>
+            <button class="filter-btn" onclick="setSignalFilter('competitor',this)">⚔️ Concorrentes</button>
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-label">Segmento</div>
+            <button class="filter-btn" onclick="setSegFilter('all',this)">Todos</button>
+            <button class="filter-btn" onclick="setSegFilter('Supermercados',this)">Supermercados</button>
+            <button class="filter-btn" onclick="setSegFilter('Farmácias',this)">Farmácias</button>
+            <button class="filter-btn" onclick="setSegFilter('Moda',this)">Moda</button>
+            <button class="filter-btn" onclick="setSegFilter('Eletrônicos',this)">Eletrônicos</button>
+            <button class="filter-btn" onclick="setSegFilter('Home Center',this)">Home Center</button>
+          </div>
+          <div class="sidebar-section">
+            <div class="sidebar-label">Ações</div>
+            <button class="filter-btn" id="btn-add-radar" onclick="openModal()" style="color:var(--accent2)">+ Nova Conta</button>
+            <button class="filter-btn" id="btn-import-radar" onclick="openImportModal()" style="color:var(--accent3)">📥 Importar</button>
+            <button class="filter-btn" onclick="exportToExcel()" style="color:var(--muted)">📊 Exportar Excel</button>
+          </div>
+        </aside>
+        <main class="content" id="radar-content" style="background:var(--bg)">
+          <div class="content-header">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="content-title" id="section-title">Todas as Contas</div>
+              <div class="sync-indicator" id="sync-indicator" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">⬤ conectando...</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span class="role-badge" id="role-badge" style="font-size:10px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);color:var(--muted)">👑 Admin</span>
+              <select class="sort-select" onchange="sortCards(this.value)">
+                <option value="priority">Prioridade</option>
+                <option value="name">Nome A-Z</option>
+                <option value="signals">Mais sinais</option>
+                <option value="recent">Mais recente</option>
+              </select>
+            </div>
+          </div>
+          <div class="cards-grid" id="cards-grid"></div>
+          <div class="empty-state" id="empty-state">
+            <div class="empty-state-icon">📡</div>
+            <p>Nenhuma conta ainda. Adicione a primeira!</p>
+          </div>
+        </main>
+      </div>
+    </div>
+
+
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- MODAL ADD/SIGNAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Nova Conta</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nome da empresa *</label>
+      <div style="display:flex;gap:8px">
+        <input class="form-input" id="f-name" placeholder="Ex: Grupo Pão de Açúcar" style="flex:1">
+        <button id="btn-autofill" onclick="autofillWithAI()" style="background:linear-gradient(135deg,rgba(0,229,160,0.15),rgba(77,159,255,0.15));border:1px solid rgba(0,229,160,0.3);color:var(--accent);padding:0 14px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap;flex-shrink:0">✨ IA</button>
+      </div>
+    </div>
+    <div id="autofill-status" style="display:none;margin-bottom:12px;padding:10px 14px;background:linear-gradient(135deg,rgba(0,229,160,0.07),rgba(77,159,255,0.07));border:1px solid rgba(0,229,160,0.2);border-radius:8px;font-size:12px;color:var(--accent)">
+      <span id="autofill-status-text">🔍 Pesquisando...</span>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Segmento</label>
+        <select class="form-select" id="f-segment">
+          <option value="">Selecione...</option>
+          <option>Supermercados</option><option>Farmácias</option><option>Moda</option><option>Eletrônicos</option><option>Home Center</option><option>Outros</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Prioridade</label>
+        <select class="form-select" id="f-priority"><option value="cold">🔵 Frio</option><option value="warm">🟡 Morno</option><option value="hot">🔴 Quente</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Nº de lojas</label><input class="form-input" id="f-stores" type="number" placeholder="Preenchido automaticamente pela IA"></div>
+    <div class="form-group"><label class="form-label">Sinal inicial</label><input class="form-input" id="f-signal-text" placeholder="Preenchido automaticamente pela IA"></div>
+    <div class="form-group"><label class="form-label">Tipo do sinal</label>
+      <select class="form-select" id="f-signal-type"><option value="expansion">🏗️ Expansão de lojas</option><option value="news">📰 Notícia / Mídia</option><option value="competitor">⚔️ Movimento de concorrente</option></select>
+    </div>
+    <button class="btn-submit" onclick="addAccount()">Adicionar ao Radar</button>
+  </div>
+</div>
+
+<!-- MODAL IMPORT -->
+<div class="modal-overlay" id="import-overlay" onclick="closeImportOnOverlay(event)">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-header">
+      <div class="modal-title">📥 Importar Contas em Massa</div>
+      <button class="modal-close" onclick="closeImportModal()">✕</button>
+    </div>
+    <div id="import-step-1">
+      <div class="template-box">
+        <div class="template-label">Colunas esperadas</div>
+        <div class="template-cols">
+          <span class="col-tag">Nome</span><span class="col-tag">Segmento</span><span class="col-tag">Prioridade</span>
+          <span class="col-tag optional">Lojas</span><span class="col-tag optional">Sinal</span><span class="col-tag optional">Tipo Sinal</span>
+        </div>
+      </div>
+      <button class="btn-download-template" onclick="downloadTemplate()">⬇️ Baixar planilha modelo</button>
+      <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+        <div class="drop-zone-icon">📂</div>
+        <div class="drop-zone-text"><strong>Clique para selecionar</strong> ou arraste aqui<br>Aceita <strong>.xlsx</strong>, <strong>.xls</strong> ou <strong>.csv</strong></div>
+      </div>
+      <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(event)">
+    </div>
+    <div id="import-step-2" style="display:none">
+      <div class="import-summary" id="import-summary"></div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Pré-visualização</div>
+      <table class="preview-table" id="preview-table"></table>
+      <button class="btn-submit" onclick="confirmImport()">✅ Confirmar Importação</button>
+      <button style="width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:9px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;margin-top:8px" onclick="resetImport()">← Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GROQ KEY -->
+<div class="modal-overlay" id="groq-overlay" onclick="if(event.target===this)closeGroqModal()">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-title">🔑 Chave IA Gratuita</div>
+      <button class="modal-close" onclick="closeGroqModal()">✕</button>
+    </div>
+    <div style="background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.2);border-radius:10px;padding:14px;margin-bottom:16px;font-size:12px;line-height:1.7;color:var(--muted)">
+      O Google Gemini oferece IA <strong style="color:var(--accent)">100% gratuita</strong> com sua conta Google.<br><br>
+      1. Acesse <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent)">aistudio.google.com/apikey</a><br>
+      2. Faça login com sua conta Google<br>
+      3. Clique em <strong style="color:var(--text)">Create API Key</strong><br>
+      4. Cole a chave abaixo
+    </div>
+    <div class="form-group"><label class="form-label">Chave Gemini (AIza...)</label><input class="form-input" id="f-groqkey" type="password" placeholder="AIza..."></div>
+    <button class="btn-submit" onclick="saveGroqKey()">Salvar Chave</button>
+  </div>
+</div>
+
+
+<!-- DEAL MODAL -->
+<div class="modal-overlay" id="deal-modal" onclick="if(event.target===this)closeDealModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Nova Oportunidade</div>
+      <button class="modal-close" onclick="closeDealModal()">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Empresa</label>
+          <input class="form-input" id="deal-empresa" placeholder="Ex: Supermercado X">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contato</label>
+          <input class="form-input" id="deal-contato" placeholder="Ex: João Silva">
+        </div>
+      </div>
+      <div class="form-grid form-grid-2">
+        <div class="form-group">
+          <label class="form-label">Valor estimado (R$)</label>
+          <input class="form-input" id="deal-valor" type="number" placeholder="Ex: 50000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Previsão de fechamento</label>
+          <input class="form-input" id="deal-data" type="date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observações</label>
+        <textarea class="form-textarea" id="deal-obs" placeholder="Notas sobre a oportunidade..." style="min-height:70px"></textarea>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-primary" onclick="saveDeal()" style="width:100%">Adicionar ao Pipeline</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+const pageConfig = {
+  followup:    { title: 'E-mail de Follow-up',        tag: 'tag-orange', tagLabel: 'Comunicação' },
+  prospeccao:  { title: 'Gerador de Prospecção',      tag: 'tag-blue',   tagLabel: 'Prospecção' },
+  roi:         { title: 'Calculadora de ROI',          tag: 'tag-green',  tagLabel: 'Proposta de Valor' },
+  pipeline:    { title: 'Pipeline de Vendas',          tag: 'tag-purple', tagLabel: 'Gestão' },
+  radar:       { title: 'Radar de Contas',              tag: 'tag-orange', tagLabel: 'Inteligência' }
+};
+
+function goTo(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${page}`).classList.add('active');
+  if(el) el.classList.add('active');
+  const cfg = pageConfig[page];
+  document.getElementById('topbar-title').textContent = cfg.title;
+  const tag = document.getElementById('topbar-tag');
+  tag.className = `tag ${cfg.tag}`;
+  tag.textContent = cfg.tagLabel;
+
+  // Radar: init supabase on first visit
+  if(page === 'radar') {
+    const role = sessionStorage.getItem('sesami-role');
+    if(!role) {
+      showRolePicker();
+    } else {
+      userRole = role;
+      applyRole();
+      if(!window._radarLoaded) {
+        loadFromSupabase();
+        setInterval(loadFromSupabase, 30000);
+        window._radarLoaded = true;
+      }
+    }
+  }
+}
+
+// ═══════════════════════════════════════
+// CHIPS
+// ═══════════════════════════════════════
+function selectChip(el, inputId) {
+  const parent = el.closest('.chips');
+  if(parent) parent.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const input = document.getElementById(inputId);
+  if(input) input.value = el.textContent.trim();
+}
+
+// ═══════════════════════════════════════
+// FOLLOW-UP GENERATOR
+// ═══════════════════════════════════════
+function gerarFollowUp() {
+  const empresa   = document.getElementById('fu-empresa').value.trim() || 'a empresa';
+  const contato   = document.getElementById('fu-contato').value.trim() || 'prezado(a)';
+  const cargo     = document.getElementById('fu-cargo').value;
+  const discussao = document.getElementById('fu-discussao').value.trim();
+  const objecao   = document.getElementById('fu-objecao').value;
+  const proximo   = document.getElementById('fu-proximo').value.trim();
+  const tom       = document.getElementById('fu-tom').value;
+
+  const primeiroNome = contato.split(' ')[0];
+
+  const abordagemObjecao = {
+    'Preço alto': `Entendo que o investimento é um ponto importante de avaliação. Por isso, gostaria de agendar 30 minutos para apresentar nossa calculadora de ROI e mostrar como clientes similares recuperaram o investimento em menos de 6 meses.`,
+    'Prazo de implementação': `Sobre o prazo, nossa implementação é modular — conseguimos ter as primeiras lojas operando em 30 dias, sem impactar a operação atual.`,
+    'Precisa aprovar internamente': `Fico à disposição para preparar qualquer material que facilite a apresentação internamente — seja um resumo executivo, case de sucesso ou uma demonstração para sua equipe.`,
+    'Já tem solução': `Faz sentido. O que tenho visto com clientes que já tinham solução é que nossa integração reduziu em média 40% o tempo de processos manuais que as outras ferramentas não cobriam. Vale uma conversa rápida para avaliar os gaps?`,
+    'Nenhuma': `Com base no que conversamos, acredito que podemos gerar valor imediato para a ${empresa}.`
+  };
+
+  const assunto = tom === 'Urgência suave'
+    ? `Re: Nossa conversa sobre ${empresa} — próximos passos`
+    : `Follow-up: ${empresa} x [Sua Empresa]`;
+
+  const corpo = `Assunto: ${assunto}
+
+${primeiroNome},
+
+Obrigado pelo tempo dedicado${discussao ? ' e pela conversa sobre ' + discussao.substring(0,60) + (discussao.length > 60 ? '...' : '') : ''}.
+
+${abordagemObjecao[objecao] || `Fico à disposição para avançar com os próximos passos.`}
+
+${proximo ? `Conforme combinamos: ${proximo}.` : 'Quando seria um bom momento para darmos sequência?'}
+
+${tom === 'Urgência suave' ? 'Estou com agenda aberta até sexta-feira — posso encaixar uma chamada rápida de 20 minutos no horário que for melhor para você.' : ''}
+
+Qualquer dúvida, estou à disposição.
+
+Abraço,
+Nelson Lima
+[Cargo] | [Empresa]
+[Telefone/WhatsApp]`;
+
+  const box = document.getElementById('fu-output-box');
+  const output = document.getElementById('fu-output');
+  output.classList.remove('output-placeholder');
+  box.classList.add('has-content');
+  output.textContent = corpo;
+  showToast('✉️ E-mail gerado!');
+}
+
+// ═══════════════════════════════════════
+// PROSPECÇÃO GENERATOR
+// ═══════════════════════════════════════
+let selectedTemplate = 'email';
+function selectTemplate(tpl) {
+  selectedTemplate = tpl;
+  document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`tpl-${tpl}`).classList.add('selected');
+  document.getElementById('pr-tipo').value = tpl;
+  document.getElementById('pr-indicacao-group').style.display = tpl === 'indicacao' ? 'flex' : 'none';
+}
+
+function gerarProspeccao() {
+  const empresa  = document.getElementById('pr-empresa').value.trim() || 'sua empresa';
+  const contato  = document.getElementById('pr-contato').value.trim() || '';
+  const cargo    = document.getElementById('pr-cargo').value;
+  const gatilho  = document.getElementById('pr-gatilho').value;
+  const tipo     = document.getElementById('pr-tipo').value;
+  const indicador= document.getElementById('pr-indicador').value.trim();
+  const primeiro = contato ? contato.split(' ')[0] : 'Olá';
+
+  const gatilhoTexto = {
+    'Expansão de lojas': `Vi que a ${empresa} está em expansão — parabéns pelo crescimento!`,
+    'Abertura de mercado': `Acompanhei a entrada da ${empresa} em novos mercados e queria aproveitar o momento para uma conversa.`,
+    'Troca de sistema': `Soube que a ${empresa} está avaliando novas soluções de tecnologia e acredito que podemos contribuir muito.`,
+    'Concorrente perdeu contrato': `Estou mapeando empresas líderes no segmento e a ${empresa} se destacou pela sua operação.`,
+    'Sem motivo específico': `Trabalho com tecnologia para varejo alimentar e a ${empresa} é exatamente o perfil de empresa que gera resultados expressivos com nossa solução.`
+  };
+
+  let msg = '';
+
+  if(tipo === 'email') {
+    msg = `Assunto: Tecnologia para varejo — ${empresa}
+
+${primeiro},
+
+${gatilhoTexto[gatilho]}
+
+Trabalho com soluções de tecnologia focadas em varejo alimentar e ajudo redes como a ${empresa} a ${cargo.includes('TI') ? 'reduzir complexidade de sistemas e integrações' : cargo.includes('Operações') ? 'reduzir perdas e aumentar eficiência operacional' : 'crescer com mais controle e previsibilidade'}.
+
+Teria 20 minutos esta semana para uma conversa rápida? Sem compromisso — só para entender se faz sentido para vocês.
+
+Abraço,
+Nelson Lima
+[Telefone]`;
+  } else if(tipo === 'linkedin') {
+    msg = `${primeiro}, tudo bem?
+
+${gatilhoTexto[gatilho]}
+
+Trabalho com tecnologia para varejo alimentar e tenho ajudado ${cargo}s a ${cargo.includes('TI') ? 'simplificar arquiteturas de sistemas' : 'melhorar resultados operacionais'}.
+
+Podemos conversar 15 minutos? Sem pitch — só uma troca rápida.`;
+  } else if(tipo === 'whatsapp') {
+    msg = `Oi ${primeiro}! Tudo bem?
+
+Sou o Nelson, trabalho com tecnologia para redes de supermercado.
+
+${gatilhoTexto[gatilho]}
+
+Teria um momento essa semana para bater um papo rápido? 🤝`;
+  } else if(tipo === 'indicacao') {
+    msg = `${primeiro},
+
+${indicador ? `O ${indicador} me indicou seu contato e falou muito bem do seu trabalho na ${empresa}.` : `Recebi uma indicação para falar com você sobre a ${empresa}.`}
+
+${gatilhoTexto[gatilho]}
+
+Trabalho com tecnologia para varejo alimentar e acredito que posso agregar valor à operação de vocês.
+
+Teria 20 minutos esta semana para conversar?
+
+Abraço,
+Nelson Lima`;
+  }
+
+  const box = document.getElementById('pr-output-box');
+  const output = document.getElementById('pr-output');
+  output.classList.remove('output-placeholder');
+  box.classList.add('has-content');
+  output.textContent = msg;
+  showToast('🎯 Mensagem gerada!');
+}
+
+// ═══════════════════════════════════════
+// ROI CALCULATOR
+// ═══════════════════════════════════════
+function maskReal(el) {
+  let v = el.value.replace(/\D/g, '');
+  if(!v) { el.value = ''; return; }
+  v = (parseInt(v) / 100).toFixed(2);
+  el.value = 'R$ ' + parseFloat(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function parseReal(id) {
+  const el = document.getElementById(id);
+  if(!el) return 0;
+  return parseFloat((el.value||'').replace(/[R$\s.]/g,'').replace(',','.')) || 0;
+}
+
+function fmtBR(v) {
+  return 'R$ ' + Math.abs(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function calcROI() {
+  const projeto    = document.getElementById('roi-projeto').value.trim() || 'Projeto';
+  const capex      = parseReal('roi-capex');
+  const opex       = parseReal('roi-opex');
+  const pdvs       = parseFloat(document.getElementById('roi-pdvs').value) || 0;
+  const fatPdv     = parseReal('roi-fat-pdv');
+  const perdasPct  = parseFloat(document.getElementById('roi-perdas-pct').value) || 0;
+  const naoIdPct   = parseFloat(document.getElementById('roi-nao-id-pct').value) || 0;
+  const metaPct    = parseFloat(document.getElementById('roi-meta-pct').value) || 0;
+
+  if(!pdvs || !fatPdv || !perdasPct || !naoIdPct || !metaPct) return;
+  if(!capex && !opex) return;
+
+  const fatTotal       = fatPdv * pdvs;
+  const perdasTotal    = fatTotal * (perdasPct / 100);
+  const perdasNaoId    = perdasTotal * (naoIdPct / 100);
+  const economiaM      = perdasNaoId * (metaPct / 100);
+
+  // CAPEX: payback em meses
+  const paybackCapex = capex > 0 ? Math.ceil(capex / economiaM) : null;
+
+  // OPEX: saldo mensal (economia - mensalidade)
+  const saldoOpex = opex > 0 ? economiaM - opex : null;
+
+  const rows = (label, val, cls='') =>
+    `<tr><td style="padding:7px 12px;border-bottom:1px solid var(--border);color:var(--ink2)">${label}</td><td style="padding:7px 12px;border-bottom:1px solid var(--border);text-align:right;font-weight:600;${cls}">${val}</td></tr>`;
+
+  const pctRows = (label, pct, val) =>
+    `<tr><td style="padding:7px 12px;border-bottom:1px solid var(--border);color:var(--ink2)">${label}</td><td style="padding:7px 12px;border-bottom:1px solid var(--border);text-align:center;color:var(--muted)">${pct.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%</td><td style="padding:7px 12px;border-bottom:1px solid var(--border);text-align:right;font-weight:600">${fmtBR(val)}</td></tr>`;
+
+  document.getElementById('roi-result-area').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+
+      <!-- Projeto -->
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:var(--ink);color:#fff;padding:8px 14px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500">${projeto}</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          ${capex > 0 ? rows('CAPEX', fmtBR(capex)) : ''}
+          ${opex  > 0 ? rows('OPEX',  fmtBR(opex)) : ''}
+        </table>
+      </div>
+
+      <!-- Cliente -->
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:var(--ink);color:#fff;padding:8px 14px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500">Dados do Cliente — ${pdvs} PDV${pdvs>1?'s':''}</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          ${rows('Faturamento mensal', fmtBR(fatTotal))}
+          <tr><td style="padding:7px 12px;border-bottom:1px solid var(--border);color:var(--ink2)">Fat. por PDV (ref)</td><td style="padding:7px 12px;border-bottom:1px solid var(--border);text-align:right;font-weight:600;color:var(--muted)">${fmtBR(fatPdv)}</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Análise de perdas -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px">
+      <div style="background:var(--ink);color:#fff;padding:8px 14px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500">Análise de Perdas</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr>
+          <th style="padding:7px 12px;border-bottom:1px solid var(--border);text-align:left;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase">Item</th>
+          <th style="padding:7px 12px;border-bottom:1px solid var(--border);text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase">%</th>
+          <th style="padding:7px 12px;border-bottom:1px solid var(--border);text-align:right;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase">R$</th>
+        </tr></thead>
+        <tbody>
+          ${pctRows('Perdas totais', perdasPct, perdasTotal)}
+          ${pctRows('Perdas não identificadas', naoIdPct, perdasNaoId)}
+          <tr style="background:rgba(42,95,63,0.08)">
+            <td style="padding:8px 12px;color:var(--accent2);font-weight:600">Meta de redução de perdas</td>
+            <td style="padding:8px 12px;text-align:center;color:var(--accent2);font-weight:600">${metaPct.toFixed(2)}%</td>
+            <td style="padding:8px 12px;text-align:right;color:var(--accent2);font-weight:700;font-size:14px">${fmtBR(economiaM)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ROI final -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="background:var(--ink);color:#fff;padding:8px 14px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500">Resultado</div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        ${paybackCapex !== null ? `
+        <tr>
+          <td style="padding:10px 14px;border-bottom:1px solid var(--border);font-weight:600">ROI — CAPEX</td>
+          <td style="padding:10px 14px;border-bottom:1px solid var(--border);text-align:center;font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--accent)">${paybackCapex}</td>
+          <td style="padding:10px 14px;border-bottom:1px solid var(--border);color:var(--muted);font-size:12px">meses para payback</td>
+        </tr>` : ''}
+        ${saldoOpex !== null ? `
+        <tr style="background:${saldoOpex >= 0 ? 'rgba(42,95,63,0.08)' : 'rgba(212,80,10,0.06)'}">
+          <td style="padding:10px 14px;font-weight:600">Saldo — OPEX (locação)</td>
+          <td style="padding:10px 14px;text-align:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:${saldoOpex >= 0 ? 'var(--accent2)' : 'var(--accent)'}">${fmtBR(saldoOpex)}</td>
+          <td style="padding:10px 14px;font-weight:600;color:${saldoOpex >= 0 ? 'var(--accent2)' : 'var(--accent)'}">${saldoOpex >= 0 ? 'positivo ✓' : 'negativo ✗'}</td>
+        </tr>` : ''}
+      </table>
+    </div>`;
+}
+// ═══════════════════════════════════════
+// PIPELINE / KANBAN
+// ═══════════════════════════════════════
+let deals = JSON.parse(localStorage.getItem('toolkit-deals') || '[]');
+let dealModalCol = 'prospeccao';
+let draggedId = null;
+
+const colColors = {
+  prospeccao: '#9a9088', qualificacao: '#1a3a6b',
+  proposta: '#d4500a', negociacao: '#c4920a', fechado: '#2a5f3f'
+};
+
+function renderPipeline() {
+  const cols = ['prospeccao','qualificacao','proposta','negociacao','fechado'];
+  cols.forEach(col => {
+    const el = document.getElementById(`col-${col}`);
+    const colDeals = deals.filter(d => d.col === col);
+    document.getElementById(`cnt-${col}`).textContent = colDeals.length;
+    el.innerHTML = colDeals.map(d => `
+      <div class="deal-card" draggable="true" id="deal-${d.id}"
+        ondragstart="dragStart(event,'${d.id}')"
+        ondragend="dragEnd(event)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px">
+          <div style="flex:1;min-width:0">
+            <div class="deal-name">${d.empresa}</div>
+            <div class="deal-company">${d.contato}</div>
+          </div>
+          <button onclick="deleteDeal('${d.id}')" draggable="false"
+            style="flex-shrink:0;width:22px;height:22px;background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--muted);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .15s"
+            onmouseover="this.style.background='#fee2e2';this.style.borderColor='#fca5a5';this.style.color='#dc2626'"
+            onmouseout="this.style.background='transparent';this.style.borderColor='var(--border)';this.style.color='var(--muted)'"
+            title="Excluir">✕</button>
+        </div>
+        ${d.valor ? `<div class="deal-value">${new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(d.valor)}</div>` : ''}
+        ${d.data ? `<div class="deal-date">📅 ${new Date(d.data+'T12:00:00').toLocaleDateString('pt-BR')}</div>` : ''}
+        ${d.obs ? `<div class="deal-badge" style="background:rgba(0,0,0,0.06);color:var(--muted)">${d.obs.substring(0,40)}${d.obs.length>40?'...':''}</div>` : ''}
+      </div>`).join('');
+  });
+
+  const total = deals.length;
+  const valorTotal = deals.reduce((s,d) => s + (d.valor||0), 0);
+  const negociacao = deals.filter(d => d.col === 'negociacao').length;
+  const fechadoVal = deals.filter(d => d.col === 'fechado').reduce((s,d) => s + (d.valor||0), 0);
+
+  document.getElementById('pipe-total').textContent = total;
+  document.getElementById('pipe-valor').textContent = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(valorTotal);
+  document.getElementById('pipe-hot').textContent = negociacao;
+  document.getElementById('pipe-fechado').textContent = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(fechadoVal);
+}
+
+function dragStart(e, id) { draggedId = id; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => document.getElementById(`deal-${id}`).style.opacity = '0.4', 0); }
+function dragEnd(e) { if(draggedId) { const el = document.getElementById(`deal-${draggedId}`); if(el) el.style.opacity = '1'; } }
+function dragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function drop(e, col) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if(!draggedId) return;
+  const deal = deals.find(d => d.id === draggedId);
+  if(deal) { deal.col = col; localStorage.setItem('toolkit-deals', JSON.stringify(deals)); renderPipeline(); }
+  draggedId = null;
+}
+
+function openDealModal(col) {
+  dealModalCol = col;
+  document.getElementById('deal-empresa').value = '';
+  document.getElementById('deal-contato').value = '';
+  document.getElementById('deal-valor').value = '';
+  document.getElementById('deal-data').value = '';
+  document.getElementById('deal-obs').value = '';
+  document.getElementById('deal-modal').classList.add('open');
+}
+function closeDealModal() { document.getElementById('deal-modal').classList.remove('open'); }
+
+function deleteDeal(id) {
+  if(!confirm('Excluir esta oportunidade?')) return;
+  deals = deals.filter(d => d.id !== id);
+  localStorage.setItem('toolkit-deals', JSON.stringify(deals));
+  renderPipeline();
+  showToast('🗑️ Oportunidade excluída');
+}
+
+function saveDeal() {
+  const empresa = document.getElementById('deal-empresa').value.trim();
+  if(!empresa) { showToast('⚠️ Informe a empresa'); return; }
+  deals.push({
+    id: Date.now().toString(),
+    empresa,
+    contato: document.getElementById('deal-contato').value.trim(),
+    valor: parseFloat(document.getElementById('deal-valor').value) || 0,
+    data: document.getElementById('deal-data').value,
+    obs: document.getElementById('deal-obs').value.trim(),
+    col: dealModalCol
+  });
+  localStorage.setItem('toolkit-deals', JSON.stringify(deals));
+  closeDealModal();
+  renderPipeline();
+  showToast('✅ Oportunidade adicionada!');
+}
+
+// ═══════════════════════════════════════
+// COPY
+// ═══════════════════════════════════════
+function copiar(elId, btnId) {
+  const text = document.getElementById(elId).textContent;
+  if(!text || text.includes('Preencha') || text.includes('Escolha')) { showToast('⚠️ Gere o conteúdo primeiro'); return; }
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(btnId);
+    btn.textContent = '✓ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
+    showToast('✅ Copiado para a área de transferência!');
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Init
+renderPipeline();
+
+
+// ═══════════════════════════════════════
+// CONFIGURAÇÃO FIXA — Supabase
+// ═══════════════════════════════════════
+const SB_URL = 'https://hvncjjuwzlgldxbfauxv.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2bmNqanV3emxnbGR4YmZhdXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2MzA5NTEsImV4cCI6MjA4NzIwNjk1MX0.5FzYbLZnthTnBUakOVuH_zWoC26iDOtFRCq0bNT4VPc';
+const TABLE  = 'contas';
+
+const COLORS=[['#00e5a0','#0a2a1e'],['#4d9fff','#0a1a2e'],['#ff6b35','#2e1a0a'],['#a855f7','#1e0a2e'],['#f59e0b','#2e1e0a'],['#ec4899','#2e0a1e'],['#10b981','#0a2e1e'],['#6366f1','#0a0e2e']];
+let accounts=[], userRole='', currentFilter='all', currentSignalFilter=null, currentSegFilter='all', currentSort='priority', searchQuery='';
+
+// ═══════════════════════════════════════
+// ROLE PICKER
+// ═══════════════════════════════════════
+function showRolePicker() {
+  document.getElementById('radar-role-screen').style.display = 'flex';
+}
+
+function enterAs(role) {
+  userRole = role;
+  sessionStorage.setItem('sesami-role', role);
+  document.getElementById('radar-role-screen').style.display = 'none';
+  applyRole();
+  if(!window._radarLoaded) {
+    loadFromSupabase();
+    setInterval(loadFromSupabase, 30000);
+    window._radarLoaded = true;
+  }
+}
+
+function switchRole() {
+  sessionStorage.removeItem('sesami-role');
+  window._radarLoaded = false;
+  showRolePicker();
+}
+
+function applyRole() {
+  const isAdmin = userRole === 'admin';
+  document.getElementById('role-badge').textContent = isAdmin ? '👑 Admin' : '👁️ Viewer';
+  document.getElementById('role-badge').className = `role-badge ${isAdmin?'admin':'viewer'}`;
+  document.getElementById('btn-add-header').style.display = isAdmin ? '' : 'none';
+  document.getElementById('btn-import-header').style.display = isAdmin ? '' : 'none';
+}
+
+// Role restore handled by goTo('radar')
+
+// ═══════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════
+function sbHeaders(extra={}) {
+  return { 'apikey':SB_KEY, 'Authorization':`Bearer ${SB_KEY}`, 'Content-Type':'application/json', 'Prefer':'return=minimal', ...extra };
+}
+
+async function loadFromSupabase() {
+  setSyncStatus('syncing','sincronizando...');
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/${TABLE}?select=*&order=updated_at.desc`, { headers: sbHeaders() });
+    if(!r.ok) throw new Error(await r.text());
+    const rows = await r.json();
+    accounts = rows.map(row => row.data);
+    renderCards();
+    setSyncStatus('synced', `${accounts.length} contas`);
+  } catch(e) {
+    setSyncStatus('error', 'erro ao sincronizar');
+    console.error('Supabase error:', e);
+  }
+}
+
+async function saveToSupabase(acc) {
+  setSyncStatus('syncing','salvando...');
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/${TABLE}`, {
+      method:'POST',
+      headers: sbHeaders({'Prefer':'resolution=merge-duplicates,return=minimal'}),
+      body: JSON.stringify({ id: String(acc.id), data: acc, updated_at: new Date().toISOString() })
+    });
+    if(!r.ok) throw new Error(await r.text());
+    setSyncStatus('synced', `${accounts.length} contas`);
+  } catch(e) {
+    setSyncStatus('error','erro ao salvar');
+    console.error('Save error:', e);
+  }
+}
+
+function setSyncStatus(state, msg) {
+  const el = document.getElementById('sync-indicator');
+  el.className = `sync-indicator ${state}`;
+  el.textContent = `${state==='syncing'?'↻':state==='synced'?'⬤':'⚠'} ${msg}`;
+}
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+function getInitials(n){return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+function priorityOrder(p){return p==='hot'?0:p==='warm'?1:2;}
+function getSorted(list){return[...list].sort((a,b)=>{if(currentSort==='priority')return priorityOrder(a.priority)-priorityOrder(b.priority);if(currentSort==='name')return a.name.localeCompare(b.name);if(currentSort==='signals')return b.signals.length-a.signals.length;if(currentSort==='recent')return b.createdAt-a.createdAt;});}
+function getFiltered(){return accounts.filter(a=>{if(currentFilter!=='all'&&a.priority!==currentFilter)return false;if(currentSegFilter!=='all'&&a.segment!==currentSegFilter)return false;if(searchQuery&&!a.name.toLowerCase().includes(searchQuery.toLowerCase()))return false;if(currentSignalFilter&&!a.signals.some(s=>s.type===currentSignalFilter))return false;return true;});}
+
+function renderCards(){
+  const grid=document.getElementById('cards-grid'), empty=document.getElementById('empty-state');
+  const filtered=getSorted(getFiltered());
+  updateStats();updateCounts();
+  if(filtered.length===0){grid.innerHTML='';empty.classList.add('visible');return;}
+  empty.classList.remove('visible');
+  const isAdmin=userRole==='admin';
+  const si={expansion:'🏗️',news:'📰',competitor:'⚔️'}, sc={expansion:'expansion',news:'news',competitor:'competitor'};
+  grid.innerHTML=filtered.map((a,i)=>{
+    const color=a.color||COLORS[i%COLORS.length];
+    const bl=a.priority==='hot'?'🔴 Quente':a.priority==='warm'?'🟡 Morno':'🔵 Frio';
+    const ts=a.signals.slice(0,2).map(s=>`<div class="signal-item ${sc[s.type]}"><div class="signal-icon">${si[s.type]}</div><div class="signal-text">${s.text}</div><div class="signal-time">${s.time}</div></div>`).join('');
+    return `<div class="account-card ${a.priority}" style="animation-delay:${i*.05}s">
+      <div class="card-top">
+        <div class="company-info">
+          <div class="company-avatar" style="background:${color[1]};color:${color[0]}">${getInitials(a.name)}</div>
+          <div><div class="company-name">${a.name}</div><div class="company-segment">${a.segment||''}${a.stores?' · '+Number(a.stores).toLocaleString()+' lojas':''}</div></div>
+        </div>
+        <div class="priority-badge badge-${a.priority}">${bl}</div>
+      </div>
+      <div class="signals">${ts}</div>
+      <div id="ai-panel-${a.id}" class="ai-panel"></div>
+      <div class="card-footer">
+        <div class="signal-count"><span>${a.signals.length}</span> sinal${a.signals.length!==1?'is':''}</div>
+        <div class="card-actions">
+          <button class="btn-ai" id="btn-ai-${a.id}" onclick="generateSummary(${JSON.stringify(a.id)})">✨ Resumo IA</button>
+          ${isAdmin?`<button class="btn-action" onclick="addSignalModal(${JSON.stringify(a.id)})">+ Sinal</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateStats(){
+  document.getElementById('total-count').textContent=accounts.length;
+  document.getElementById('hot-count').textContent=accounts.filter(a=>a.priority==='hot').length;
+  document.getElementById('signal-count').textContent=accounts.reduce((s,a)=>s+a.signals.filter(sig=>['agora','IA','importado'].some(t=>sig.time===t)||sig.time.includes('h')).length,0);
+  document.getElementById('opp-count').textContent=accounts.filter(a=>a.priority!=='cold').length;
+}
+function updateCounts(){
+  document.getElementById('count-all').textContent=accounts.length;
+  document.getElementById('count-hot').textContent=accounts.filter(a=>a.priority==='hot').length;
+  document.getElementById('count-warm').textContent=accounts.filter(a=>a.priority==='warm').length;
+  document.getElementById('count-cold').textContent=accounts.filter(a=>a.priority==='cold').length;
+}
+function setFilter(f,btn){currentFilter=f;currentSignalFilter=null;currentSegFilter='all';document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const l={all:'Todas as Contas',hot:'Contas Quentes',warm:'Contas Mornas',cold:'Contas Frias'};document.getElementById('section-title').textContent=l[f]||'Contas';renderCards();}
+function setSignalFilter(f,btn){currentSignalFilter=currentSignalFilter===f?null:f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));if(currentSignalFilter)btn.classList.add('active');renderCards();}
+function setSegFilter(f,btn){currentSegFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderCards();}
+function filterCards(){searchQuery=document.getElementById('search-input').value;renderCards();}
+function sortCards(val){currentSort=val;renderCards();}
+
+// ═══════════════════════════════════════
+// ADD / SIGNAL
+// ═══════════════════════════════════════
+let addSignalFor=null;
+function openModal(){if(userRole!=='admin')return;addSignalFor=null;document.getElementById('modal-title').textContent='Nova Conta';document.getElementById('modal-overlay').classList.add('open');}
+function addSignalModal(id){if(userRole!=='admin')return;addSignalFor=id;const acc=accounts.find(a=>a.id===id);document.getElementById('modal-title').textContent=`+ Sinal · ${acc.name}`;document.getElementById('f-name').value=acc.name;document.getElementById('f-segment').value=acc.segment||'';document.getElementById('f-priority').value=acc.priority;document.getElementById('f-stores').value=acc.stores||'';document.getElementById('f-signal-text').value='';document.getElementById('modal-overlay').classList.add('open');}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');addSignalFor=null;document.getElementById('autofill-status').style.display='none';window._extraSignals=null;['f-name','f-segment','f-priority','f-stores','f-signal-text'].forEach(id=>{const el=document.getElementById(id);if(el.tagName==='SELECT')el.selectedIndex=0;else el.value=''});}
+function closeModalOnOverlay(e){if(e.target===document.getElementById('modal-overlay'))closeModal();}
+
+async function addAccount(){
+  if(userRole!=='admin')return;
+  const name=document.getElementById('f-name').value.trim();
+  const segment=document.getElementById('f-segment').value;
+  const priority=document.getElementById('f-priority').value;
+  const stores=document.getElementById('f-stores').value;
+  const signalText=document.getElementById('f-signal-text').value.trim();
+  const signalType=document.getElementById('f-signal-type').value;
+  if(!name){showToast('⚠️ Informe o nome da empresa');return;}
+  if(addSignalFor!==null){
+    const acc=accounts.find(a=>a.id===addSignalFor);
+    acc.priority=priority;
+    if(signalText)acc.signals.unshift({type:signalType,text:signalText,time:'agora'});
+    await saveToSupabase(acc);
+    showToast('✅ Sinal adicionado!');
+  } else {
+    const signals=signalText?[{type:signalType,text:signalText,time:'agora'}]:[];
+    if(window._extraSignals){window._extraSignals.forEach(s=>signals.push({type:s.type,text:s.text,time:'IA'}));window._extraSignals=null;}
+    const acc={id:Date.now(),name,segment,priority,stores:stores||null,color:COLORS[accounts.length%COLORS.length],signals,createdAt:Date.now()};
+    accounts.push(acc);
+    await saveToSupabase(acc);
+    showToast('✅ Conta adicionada!');
+  }
+  closeModal();renderCards();
+}
+
+// ═══════════════════════════════════════
+// IA — Análise local baseada nos dados do card
+// ═══════════════════════════════════════
+async function searchNews(companyName) {
+  const acc = accounts.find(a => a.name === companyName);
+  if (!acc) throw new Error('Conta não encontrada');
+
+  const prioLabel = acc.priority === 'hot' ? 'QUENTE 🔥' : acc.priority === 'warm' ? 'MORNO ⚡' : 'FRIO 🔵';
+  const signalLabels = {expansion:'Expansão de Lojas', news:'Notícia/Mídia', competitor:'Concorrente'};
+  const signals = acc.signals.slice(0,3);
+
+  const momento = signals.length > 0
+    ? signals.map(s => `• ${signalLabels[s.type]}: ${s.text}`).join('
+')
+    : `• Nenhum sinal registrado ainda para ${companyName}`;
+
+  const opMap = {
+    'Supermercados': 'Soluções de automação de checkout, gestão de estoque e experiência do cliente são altamente relevantes.',
+    'Farmácias': 'Sistemas de gestão de farmácia, omnichannel e fidelização têm alta demanda neste segmento.',
+    'Moda': 'Plataformas de e-commerce, gestão de coleções e experiência phygital são diferenciais competitivos.',
+    'Eletrônicos': 'Integração de canais, gestão de garantias e pós-venda digital são pontos de entrada eficazes.',
+    'Home Center': 'Gestão de SKUs complexos, marketplace e experiência de compra assistida são prioridades.',
+    'Outros': 'Soluções de gestão integrada e analytics podem gerar valor imediato.'
+  };
+  const oportunidade = opMap[acc.segment] || opMap['Outros'];
+
+  const acaoMap = {
+    hot: `⚠️ Conta QUENTE — agende reunião esta semana. Mencione os sinais recentes como gancho de abertura.`,
+    warm: `📅 Conta MORNA — envie case de sucesso do segmento ${acc.segment} e proponha diagnóstico gratuito.`,
+    cold: `📧 Conta FRIA — mantenha nurturing com conteúdo relevante sobre tendências em ${acc.segment}.`
+  };
+  const acao = acaoMap[acc.priority];
+
+  return `🎯 MOMENTO (${prioLabel})
+${momento}
+
+💡 OPORTUNIDADE
+${oportunidade}
+
+🚀 AÇÃO
+${acao}`;
+}
+
+async function callClaude(prompt, maxTokens=500) {
+  // Extrai nome da empresa do prompt para autofill
+  const match = prompt.match(/Sobre "([^"]+)"/);
+  if (match) return await autoFillLocal(match[1]);
+  return 'Função não disponível no modo offline.';
+}
+
+async function autoFillLocal(name) {
+  // Retorna JSON básico para autofill sem API
+  const segments = ['Supermercados','Farmácias','Moda','Eletrônicos','Home Center'];
+  return JSON.stringify({
+    segment: 'Outros', stores: null, priority: 'cold',
+    priority_reason: 'Sem dados disponíveis offline',
+    signals: []
+  });
+}
+
+async function generateSummary(id){
+  const acc=accounts.find(a=>a.id===id);
+  const panel=document.getElementById(`ai-panel-${id}`);
+  const btn=document.getElementById(`btn-ai-${id}`);
+  if(panel.classList.contains('visible')){panel.classList.remove('visible');return;}
+  btn.classList.add('loading');btn.textContent='⏳';
+  panel.innerHTML=`<div class="ai-panel-header"><div class="ai-label">✨ Análise IA</div></div><div class="ai-text ai-typing" id="ai-text-${id}">Buscando informações sobre ${acc.name}...</div>`;
+  panel.classList.add('visible');
+  try{
+    const text = await searchNews(acc.name);
+    const textEl=document.getElementById(`ai-text-${id}`);
+    if(textEl){textEl.classList.remove('ai-typing');let i=0;textEl.textContent='';const iv=setInterval(()=>{if(i<text.length){textEl.textContent+=text[i];i++;}else clearInterval(iv);},8);}
+    panel.querySelector('.ai-panel-header').innerHTML=`<div class="ai-label">✨ Análise IA</div><button class="ai-close" onclick="document.getElementById('ai-panel-${id}').classList.remove('visible')">✕</button>`;
+  }catch(err){
+    panel.innerHTML=`<div class="ai-panel-header"><div class="ai-label">❌ Erro</div></div><div class="ai-text" style="color:var(--hot)">${err.message}</div>`;
+  }
+  btn.classList.remove('loading');btn.innerHTML='✨ Resumo IA';
+}
+
+async function autofillWithAI(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){showToast('⚠️ Digite o nome da empresa primeiro');return;}
+  const btn=document.getElementById('btn-autofill');
+  const status=document.getElementById('autofill-status');
+  btn.textContent='⏳';btn.disabled=true;
+  status.style.display='block';
+  document.getElementById('autofill-status-text').textContent='🔍 Pesquisando '+name+'...';
+  try{
+    const raw=await callClaude(`Especialista em varejo BR. Sobre "${name}", retorne APENAS JSON válido sem markdown:
+{"segment":"Supermercados|Farmácias|Moda|Eletrônicos|Home Center|Outros","stores":número_ou_null,"priority":"hot|warm|cold","priority_reason":"frase curta","signals":[{"type":"expansion|news|competitor","text":"sinal máx 12 palavras"},{"type":"...","text":"..."},{"type":"...","text":"..."}]}`,500);
+    const info=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    if(info.segment){const s=document.getElementById('f-segment');for(let o of s.options)if(o.value===info.segment){s.value=info.segment;break;}}
+    if(info.stores)document.getElementById('f-stores').value=info.stores;
+    if(info.priority)document.getElementById('f-priority').value=info.priority;
+    if(info.signals&&info.signals.length>0){document.getElementById('f-signal-text').value=info.signals[0].text;document.getElementById('f-signal-type').value=info.signals[0].type;}
+    window._extraSignals=(info.signals||[]).slice(1);
+    status.innerHTML=`<span>✅ Preenchido${info.priority_reason?' · '+info.priority_reason:''}</span>`;
+    showToast('✅ Dados preenchidos!');
+  }catch(e){
+    status.innerHTML=`<span style="color:var(--hot)">❌ Não foi possível buscar. Preencha manualmente.</span>`;
+  }
+  btn.textContent='✨ IA';btn.disabled=false;
+}
+
+// ═══════════════════════════════════════
+// EXPORT EXCEL
+// ═══════════════════════════════════════
+function exportToExcel(){
+  const pL={hot:'Quente',warm:'Morno',cold:'Frio'}, sL={expansion:'Expansão',news:'Notícia',competitor:'Concorrente'};
+  const r1=[['Empresa','Segmento','Prioridade','Nº Lojas','Sinais','Detalhes','Cadastro']];
+  accounts.forEach(a=>r1.push([a.name,a.segment||'-',pL[a.priority],a.stores||'-',a.signals.length,a.signals.map(s=>s.text).join(' | '),new Date(a.createdAt).toLocaleDateString('pt-BR')]));
+  const r2=[['Empresa','Segmento','Prioridade','Tipo','Descrição','Quando']];
+  accounts.forEach(a=>a.signals.forEach(s=>r2.push([a.name,a.segment||'-',pL[a.priority],sL[s.type]||s.type,s.text,s.time])));
+  const r3=[['Empresa','Segmento','Nº Lojas','Último Sinal','Tipo']];
+  accounts.filter(a=>a.priority==='hot').forEach(a=>{const l=a.signals[0];r3.push([a.name,a.segment||'-',a.stores||'-',l?l.text:'-',l?sL[l.type]:'-']);});
+  const wb=XLSX.utils.book_new();
+  const w1=XLSX.utils.aoa_to_sheet(r1);w1['!cols']=[{wch:25},{wch:15},{wch:10},{wch:10},{wch:8},{wch:60},{wch:12}];
+  const w2=XLSX.utils.aoa_to_sheet(r2);w2['!cols']=[{wch:25},{wch:15},{wch:10},{wch:15},{wch:60},{wch:12}];
+  const w3=XLSX.utils.aoa_to_sheet(r3);w3['!cols']=[{wch:25},{wch:15},{wch:10},{wch:60},{wch:15}];
+  XLSX.utils.book_append_sheet(wb,w1,'Radar Completo');
+  XLSX.utils.book_append_sheet(wb,w2,'Todos os Sinais');
+  XLSX.utils.book_append_sheet(wb,w3,'Contas Quentes');
+  XLSX.writeFile(wb,`radar-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.xlsx`);
+  showToast('📊 Excel exportado!');
+}
+
+// ═══════════════════════════════════════
+// IMPORT
+// ═══════════════════════════════════════
+let importPreviewData=[];
+function openImportModal(){if(userRole!=='admin')return;resetImport();document.getElementById('import-overlay').classList.add('open');}
+function closeImportModal(){document.getElementById('import-overlay').classList.remove('open');}
+function closeImportOnOverlay(e){if(e.target===document.getElementById('import-overlay'))closeImportModal();}
+function onDragOver(e){e.preventDefault();document.getElementById('drop-zone').classList.add('drag-over');}
+function onDragLeave(){document.getElementById('drop-zone').classList.remove('drag-over');}
+function onDrop(e){e.preventDefault();document.getElementById('drop-zone').classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f)processFile(f);}
+function handleFile(e){const f=e.target.files[0];if(f)processFile(f);}
+function processFile(file){
+  const reader=new FileReader(), isCsv=file.name.endsWith('.csv');
+  reader.onload=function(e){
+    let rows=[];
+    if(isCsv){rows=e.target.result.split('\n').map(r=>r.split(/[,;]/).map(c=>c.trim().replace(/^"|"$/g,'')));}
+    else{const wb=XLSX.read(e.target.result,{type:'binary'});rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});}
+    parseImportRows(rows);
+  };
+  if(isCsv)reader.readAsText(file,'UTF-8');else reader.readAsBinaryString(file);
+}
+function parseImportRows(rows){
+  if(rows.length<2){showToast('⚠️ Arquivo vazio');return;}
+  const h=rows[0].map(x=>String(x).toLowerCase().trim());
+  const ci={nome:h.findIndex(x=>x.includes('nome')||x.includes('empresa')),seg:h.findIndex(x=>x.includes('seg')),pri:h.findIndex(x=>x.includes('prior')||x.includes('status')),loj:h.findIndex(x=>x.includes('loja')||x.includes('store')),sin:h.findIndex(x=>x.includes('sinal')||x.includes('obs')),tip:h.findIndex(x=>x.includes('tipo')||x.includes('type'))};
+  if(ci.nome===-1){showToast('⚠️ Coluna "Nome" não encontrada');return;}
+  const pm={'quente':'hot','hot':'hot','morno':'warm','warm':'warm','frio':'cold','cold':'cold','':'cold'};
+  const tm={'expansão':'expansion','expansao':'expansion','expansion':'expansion','notícia':'news','noticia':'news','news':'news','concorrente':'competitor','competitor':'competitor','':'expansion'};
+  importPreviewData=rows.slice(1).filter(r=>r[ci.nome]?.toString().trim()).map(r=>{
+    const g=(i)=>i>=0?String(r[i]||'').trim():'';
+    return{name:g(ci.nome),segment:g(ci.seg)||'Outros',priority:pm[g(ci.pri).toLowerCase()]||'cold',stores:g(ci.loj)||null,signalText:g(ci.sin),signalType:tm[g(ci.tip).toLowerCase()]||'expansion'};
+  });
+  if(!importPreviewData.length){showToast('⚠️ Nenhuma conta válida');return;}
+  showImportPreview();
+}
+function showImportPreview(){
+  document.getElementById('import-step-1').style.display='none';
+  document.getElementById('import-step-2').style.display='block';
+  const ex=accounts.map(a=>a.name.toLowerCase());
+  const nw=importPreviewData.filter(r=>!ex.includes(r.name.toLowerCase()));
+  document.getElementById('import-summary').innerHTML=`<div class="import-stat"><div class="import-stat-val">${importPreviewData.length}</div><div class="import-stat-label">No arquivo</div></div><div class="import-stat"><div class="import-stat-val" style="color:var(--accent)">${nw.length}</div><div class="import-stat-label">Novas</div></div><div class="import-stat"><div class="import-stat-val" style="color:var(--warm)">${importPreviewData.length-nw.length}</div><div class="import-stat-label">Duplicadas</div></div>`;
+  const pl={hot:'🔴 Quente',warm:'🟡 Morno',cold:'🔵 Frio'};
+  document.getElementById('preview-table').innerHTML=`<thead><tr><th>Empresa</th><th>Segmento</th><th>Prioridade</th><th>Lojas</th></tr></thead><tbody>${importPreviewData.slice(0,8).map(r=>`<tr><td>${r.name}</td><td>${r.segment}</td><td>${pl[r.priority]}</td><td>${r.stores||'-'}</td></tr>`).join('')}${importPreviewData.length>8?`<tr><td colspan="4" style="text-align:center;color:var(--muted)">... e mais ${importPreviewData.length-8}</td></tr>`:''}</tbody>`;
+}
+async function confirmImport(){
+  const ex=accounts.map(a=>a.name.toLowerCase());
+  let added=0; const newAccs=[];
+  importPreviewData.forEach(r=>{
+    if(ex.includes(r.name.toLowerCase()))return;
+    const acc={id:Date.now()+Math.random(),name:r.name,segment:r.segment,priority:r.priority,stores:r.stores||null,color:COLORS[accounts.length%COLORS.length],signals:r.signalText?[{type:r.signalType,text:r.signalText,time:'importado'}]:[],createdAt:Date.now()};
+    accounts.push(acc);newAccs.push(acc);added++;
+  });
+  closeImportModal();renderCards();
+  showToast(`✅ ${added} conta${added!==1?'s':''} importada${added!==1?'s':''}!`);
+  await Promise.all(newAccs.map(a=>saveToSupabase(a)));
+}
+function resetImport(){importPreviewData=[];document.getElementById('import-step-1').style.display='block';document.getElementById('import-step-2').style.display='none';document.getElementById('file-input').value='';}
+function downloadTemplate(){
+  const ws=XLSX.utils.aoa_to_sheet([['Nome','Segmento','Prioridade','Lojas','Sinal','Tipo Sinal'],['Grupo Exemplo','Supermercados','quente','120','Inaugurou 5 lojas em SP','expansão'],['Farmácia Modelo','Farmácias','morno','45','',''],['Loja Teste','Moda','frio','12','Nova diretoria assumiu','notícia']]);
+  ws['!cols']=[{wch:25},{wch:15},{wch:12},{wch:8},{wch:40},{wch:15}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Contas');
+  XLSX.writeFile(wb,'modelo-importacao-radar.xlsx');showToast('⬇️ Modelo baixado!');
+}
+
+
+function openGroqModal(){const k=localStorage.getItem('groq-api-key')||'';document.getElementById('f-groqkey').value=k;document.getElementById('groq-overlay').classList.add('open');}
+function closeGroqModal(){document.getElementById('groq-overlay').classList.remove('open');}
+function saveGroqKey(){const k=document.getElementById('f-groqkey').value.trim();if(!k){showToast('⚠️ Insira uma chave válida');return;}localStorage.setItem('groq-api-key',k);showToast('✅ Chave IA salva!');closeGroqModal();}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+</script>
+</body>
+</html>
